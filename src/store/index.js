@@ -11,18 +11,13 @@ export const StoreProvider = ({ children }) => {
 
   const context = {
     products: {
-      fetch: useCallback(() => productsStore.fetch(setProducts), []),
-      search: useCallback(
-        (query) => productsStore.search(setProducts, query),
-        []
-      ),
+      fetch: useCallback(async () => setProducts(await productsStore.fetch()), []),
+      search: useCallback(async (query) => setProducts(await productsStore.search(query)), []),
       data: products,
     },
   }
 
-  return (
-    <StoreContext.Provider value={context}>{children}</StoreContext.Provider>
-  )
+  return <StoreContext.Provider value={context}>{children}</StoreContext.Provider>
 }
 
 export const useStore = () => React.useContext(StoreContext)

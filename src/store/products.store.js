@@ -12,6 +12,6 @@ const searchProducts = (query) => {
 }
 
 export const productsStore = {
-  fetch: async (setData) => setData(await fetchProducts()),
-  search: async (setData, query) => setData(await searchProducts(query)),
+  fetch: async () => await fetchProducts(),
+  search: async (query) => await searchProducts(query),
 }
