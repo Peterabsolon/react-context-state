@@ -29,7 +29,7 @@ it("renders button, logging the click event", async () => {
 })
 
 it("fetches products on mount", async () => {
-  productsStore.fetch.mockImplementationOnce(() => Promise.resolve([PRODUCT_FOO, PRODUCT_BAR]))
+  productsStore.fetch.mockImplementation(() => Promise.resolve([PRODUCT_FOO, PRODUCT_BAR]))
 
   render(<App />)
 
@@ -43,8 +43,8 @@ it("fetches products on mount", async () => {
 })
 
 it("searches products", async () => {
-  productsStore.fetch.mockImplementationOnce(() => Promise.resolve([PRODUCT_FOO, PRODUCT_BAR]))
-  productsStore.search.mockImplementationOnce(() => Promise.resolve([PRODUCT_FOO]))
+  productsStore.fetch.mockImplementation(() => Promise.resolve([PRODUCT_FOO, PRODUCT_BAR]))
+  productsStore.search.mockImplementation(() => Promise.resolve([PRODUCT_FOO]))
 
   render(<App />)
 

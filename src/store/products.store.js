@@ -12,12 +12,6 @@ export const searchProducts = (query) => {
 }
 
 export const productsStore = {
-  fetch: async () => {
-    const res = await fetchProducts()
-
-    console.log("res", res)
-
-    return res
-  },
-  search: async (query) => await searchProducts(query),
+  fetch: () => fetchProducts(),
+  search: (query) => searchProducts(query),
 }
