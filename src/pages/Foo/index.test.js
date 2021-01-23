@@ -9,7 +9,10 @@ beforeEach(() => {
   productsStore.fetch.mockImplementation(() => Promise.resolve([]))
 })
 
-test("renders button, logging the click event", async () => {
+const PRODUCT_FOO = { id: 1, title: "Product Foo" }
+const PRODUCT_BAR = { id: 2, title: "Product Bar" }
+
+it("renders button, logging the click event", async () => {
   jest.spyOn(console, "log")
 
   render(<App />)
@@ -26,45 +29,32 @@ test("renders button, logging the click event", async () => {
 })
 
 it("fetches products on mount", async () => {
-  productsStore.fetch.mockImplementationOnce(() =>
-    Promise.resolve([
-      { id: 1, title: "Product #1" },
-      { id: 2, title: "Product #2" },
-    ])
-  )
+  productsStore.fetch.mockImplementationOnce(() => Promise.resolve([PRODUCT_FOO, PRODUCT_BAR]))
 
   render(<App />)
 
   await waitFor(() => {
-    const product1 = screen.getByText(/Product #1/i)
-    expect(product1).toBeInTheDocument()
+    const productFoo = screen.getByText(/Product Foo/i)
+    expect(productFoo).toBeInTheDocument()
 
-    const product2 = screen.getByText(/Product #2/i)
-    expect(product2).toBeInTheDocument()
+    const productBar = screen.getByText(/Product Bar/i)
+    expect(productBar).toBeInTheDocument()
   })
 })
 
 it("searches products", async () => {
-  productsStore.fetch.mockImplementationOnce(() =>
-    Promise.resolve([
-      { id: 1, title: "Product #1" },
-      { id: 2, title: "Product #2" },
-    ])
-  )
-
-  productsStore.search.mockImplementationOnce(() =>
-    Promise.resolve([{ id: 1, title: "Product #1" }])
-  )
+  productsStore.fetch.mockImplementationOnce(() => Promise.resolve([PRODUCT_FOO, PRODUCT_BAR]))
+  productsStore.search.mockImplementationOnce(() => Promise.resolve([PRODUCT_FOO]))
 
   render(<App />)
 
   await waitFor(() => {
     const searchInput = screen.getByPlaceholderText(/Search/i)
-    fireEvent.change(searchInput, { target: { value: "#1" } })
+    fireEvent.change(searchInput, { target: { value: "Foo" } })
 
-    const product1 = screen.getByText(/Product #1/i)
-    expect(product1).toBeInTheDocument()
+    const productFoo = screen.getByText(/Product Foo/i)
+    expect(productFoo).toBeInTheDocument()
 
-    expect(screen.queryByText(/Product #2/i)).toBe(null)
+    expect(screen.queryByText(/Product Bar/i)).toBe(null)
   })
 })
