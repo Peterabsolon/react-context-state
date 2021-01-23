@@ -1,12 +1,12 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react"
 
 import App from "../../App"
-import { productsStore } from "../../store/products.store"
+import * as api from "../../lib/api"
 
-jest.mock("../../store/products.store")
+jest.mock("../../lib/api")
 
 beforeEach(() => {
-  productsStore.fetch.mockImplementation(() => Promise.resolve([]))
+  api.fetchProducts.mockImplementation(() => Promise.resolve([]))
 })
 
 const PRODUCT_FOO = { id: 1, title: "Product Foo" }
@@ -22,18 +22,18 @@ it("renders button, logging the click event", async () => {
     expect(btnElement).toBeInTheDocument()
 
     fireEvent.click(btnElement)
-    expect(console.log.mock.calls[0][0]).toBe("clicked")
+    expect(console.log.mock.calls[1][0]).toBe("clicked")
   })
-
-  jest.clearAllMocks()
 })
 
 it("fetches products on mount", async () => {
-  productsStore.fetch.mockImplementation(() => Promise.resolve([PRODUCT_FOO, PRODUCT_BAR]))
+  api.fetchProducts.mockImplementation(() => Promise.resolve([PRODUCT_FOO, PRODUCT_BAR]))
 
   render(<App />)
 
   await waitFor(() => {
+    expect(console.log.mock.calls[0][0]).toBe("Fetching products")
+
     const productFoo = screen.getByText(/Product Foo/i)
     expect(productFoo).toBeInTheDocument()
 
@@ -43,14 +43,20 @@ it("fetches products on mount", async () => {
 })
 
 it("searches products", async () => {
-  productsStore.fetch.mockImplementation(() => Promise.resolve([PRODUCT_FOO, PRODUCT_BAR]))
-  productsStore.search.mockImplementation(() => Promise.resolve([PRODUCT_FOO]))
+  jest.spyOn(console, "log")
+
+  api.fetchProducts.mockImplementation(() => Promise.resolve([PRODUCT_FOO, PRODUCT_BAR]))
+  api.searchProducts.mockImplementation(() => Promise.resolve([PRODUCT_FOO]))
 
   render(<App />)
 
   await waitFor(() => {
+    expect(console.log.mock.calls[0][0]).toBe("Fetching products")
+
     const searchInput = screen.getByPlaceholderText(/Search/i)
     fireEvent.change(searchInput, { target: { value: "Foo" } })
+
+    expect(console.log.mock.calls[1][0]).toBe("Searching products")
 
     const productFoo = screen.getByText(/Product Foo/i)
     expect(productFoo).toBeInTheDocument()
