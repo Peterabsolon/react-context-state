@@ -18,6 +18,8 @@ it("renders button, logging the click event", async () => {
   render(<App />)
 
   await waitFor(() => {
+    expect(console.log.mock.calls[0][0]).toBe("Fetching products")
+
     const btnElement = screen.getByText(/Click me!/i)
     expect(btnElement).toBeInTheDocument()
 
