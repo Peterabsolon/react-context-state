@@ -25,6 +25,7 @@ const Content = React.memo(({ onMount, products }) => {
 
       <input
         type="text"
+        placeholder="Search"
         onChange={(evt) => products.search(evt.target.value)}
       />
 

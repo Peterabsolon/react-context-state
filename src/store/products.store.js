@@ -3,15 +3,21 @@ const data = [
   { id: 2, title: "Product #2" },
 ]
 
-const fetchProducts = () => {
+export const fetchProducts = () => {
   return Promise.resolve(data)
 }
 
-const searchProducts = (query) => {
+export const searchProducts = (query) => {
   return Promise.resolve(data.filter((item) => item.title.includes(query)))
 }
 
 export const productsStore = {
-  fetch: async () => await fetchProducts(),
+  fetch: async () => {
+    const res = await fetchProducts()
+
+    console.log("res", res)
+
+    return res
+  },
   search: async (query) => await searchProducts(query),
 }
